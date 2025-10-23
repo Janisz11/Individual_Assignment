@@ -1,0 +1,6 @@
+language,size,execution_time_s,memory_usage_mb
+java,10,0.000001,18.10
+java,50,0.000100,18.11
+java,100,0.000592,18.14
+java,200,0.004742,18.14
+java,400,0.058890,18.14

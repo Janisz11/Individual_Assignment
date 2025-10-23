@@ -1,0 +1,99 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{\textbf{Performance Benchmark of Basic Matrix Multiplication Across Programming Languages}}
+\author{Kacper Janiszewski \\ Wrocław University of Science and Technology}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report presents a comparative performance analysis of matrix multiplication implemented in three programming languages: Python, Java, and C. Each implementation follows a naive $O(n^3)$ algorithm, and the study evaluates both execution time and memory usage across different dataset sizes. The goal was to identify performance differences resulting from language design, runtime overhead, and compiler optimizations. Professional benchmarking tools were used: \texttt{pytest-benchmark} for Python, \texttt{JMH} (Java Microbenchmark Harness) for Java, and \texttt{perf} for C.
+\end{abstract}
+
+\section{Introduction}
+Matrix multiplication is a fundamental operation used in scientific computing, graphics, and machine learning. Its computational cost makes it a suitable candidate for cross-language performance evaluation. In this experiment, we compared the same basic algorithm implemented in Python, Java, and C to investigate how language execution models and compilation strategies affect real-world performance.
+
+\section{Methodology}
+The benchmarking setup ensured fairness and reproducibility. Each language implementation was divided into production and test code. Benchmarks were executed multiple times, and average execution times were recorded.
+
+\textbf{Matrix sizes tested:} 10, 50, 100, 200, and 400.  
+\textbf{Runs per size:} 10.
+
+\subsection{Tools and Environment}
+\begin{itemize}
+  \item \textbf{Python:} Version 3.12, benchmarked using \texttt{pytest-benchmark}.
+  \item \textbf{Java:} Version 17, benchmarked with \texttt{JMH}.
+  \item \textbf{C:} Compiled with \texttt{gcc -O3 -march=native} and profiled using \texttt{perf stat}.
+\end{itemize}
+
+Each implementation used the same algorithmic logic and matrix initialization routine. Only native libraries were used to maintain comparability between the languages.
+
+\section{Implementation Details}
+All implementations follow the same computational flow:
+\begin{enumerate}
+  \item Random generation of two $n \times n$ matrices.
+  \item Standard triple-nested loop matrix multiplication.
+  \item Measurement of execution time and memory consumption.
+  \item Averaging over multiple runs.
+\end{enumerate}
+
+\subsection{Python Implementation}
+The Python benchmark employed \texttt{pytest-benchmark} in pedantic mode to control iteration counts precisely. Memory usage was monitored using \texttt{tracemalloc}, and all results were saved to \texttt{matrix\_bench\_python.csv}.  
+At higher matrix sizes ($n \geq 200$), Python’s performance degraded sharply, with runtime increasing exponentially due to the interpreter overhead and inefficient list-based memory layout.
+
+\subsection{Java Implementation}
+The Java benchmark used the \texttt{JMH} framework, which automatically handled warmup and measurement phases, ensuring stable results. The main benchmarking class, \texttt{RunBench}, exported results to \texttt{matrix\_bench\_java.csv}. Compilation into a fat JAR was handled by the Maven Assembly Plugin.  
+Java benefited from Just-In-Time (JIT) optimizations, which allowed it to perform substantially faster than Python while maintaining reasonable memory use.
+
+\subsection{C Implementation}
+The C implementation was compiled with high optimization flags (\texttt{-O3 -march=native}) and executed using \texttt{perf stat}. Results included wall-clock time, CPU cycles, and cache statistics. Output was parsed and saved into \texttt{matrix\_bench\_c.csv}.  
+This implementation exhibited the best raw performance, owing to direct memory access, static typing, and compiler-level optimizations.
+
+\section{Results and Analysis}
+\subsection{Execution Time}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{plots/time_bar_all_languages.png}
+\caption{Execution time vs matrix size (grouped by language).}
+\label{fig:time_bar}
+\end{figure}
+
+\subsection{Memory Usage}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{plots/memory_bar_all_languages.png}
+\caption{Memory usage vs matrix size (grouped by language).}
+\label{fig:memory_bar}
+\end{figure}
+
+As expected, C achieved the lowest execution time across all tested matrix sizes. Java demonstrated moderate performance, balancing speed and resource management due to JIT compilation and garbage collection. Python’s performance, however, decreased drastically for larger matrices.  
+At size $n=400$, the Python implementation required several seconds to complete, while Java and C completed in fractions of a second. This behavior highlights the cost of dynamic typing and lack of low-level memory optimization in Python.
+
+\section{Profiling and Discussion}
+Profiling with \texttt{perf} confirmed that the C implementation achieved the highest instruction throughput and cache locality. Java performed efficiently thanks to its JIT compiler and automatic optimizations during runtime.  
+Python, while user-friendly and expressive, suffered from high interpreter overhead and frequent memory allocation events. For larger matrices, it became impractical to run additional tests without optimized numerical libraries such as NumPy.
+
+\section{Conclusion}
+This benchmark study illustrates the trade-offs between development productivity and execution performance:
+\begin{itemize}
+  \item \textbf{C:} Fastest execution, most efficient memory use, ideal for performance-critical applications.
+  \item \textbf{Java:} Good balance between speed, safety, and portability.
+  \item \textbf{Python:} Easiest to write and test, but the slowest in computational workloads.
+\end{itemize}
+For small matrices (up to 100), all languages performed comparably. However, as problem size increased, the efficiency gap widened drastically, with C outperforming Python by several orders of magnitude.
+
+\section{Future Work}
+Future experiments could involve optimized algorithms such as Strassen’s or block matrix multiplication. Additionally, GPU acceleration (CUDA, OpenCL) and parallelization (OpenMP) could further demonstrate language-specific strengths in high-performance computing.
+
+\section{Repository}
+All code, benchmark data, and plots are available on GitHub:  
+\url{\url{https://github.com/Janisz11/Individual_Assignment}}
+
+\end{document}

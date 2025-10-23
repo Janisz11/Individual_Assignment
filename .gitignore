@@ -1,0 +1,90 @@
+# -------------------------
+# OS / Editor / IDE
+# -------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+.pytest_cache/
+.benchmarks/
+
+# keep Python results CSVs
+!benchmarks_python/results/
+benchmarks_python/results/*
+!benchmarks_python/results/*.csv
+
+# -------------------------
+# Java / Maven
+# -------------------------
+benchmarks_java/target/
+*.class
+*.log
+
+# keep Java results CSVs
+!benchmarks_java/results/
+benchmarks_java/results/*
+!benchmarks_java/results/*.csv
+
+# -------------------------
+# C build artifacts
+# -------------------------
+benchmark_c/target/
+*.o
+*.obj
+*.dll
+*.so
+*.a
+*.lib
+*.exe
+*.out
+
+# keep C results CSVs
+!benchmark_c/results/
+benchmark_c/results/*
+!benchmark_c/results/*.csv
+
+# -------------------------
+# Plots
+# -------------------------
+!plots/
+plots/*
+!plots/*.png
+
+# -------------------------
+# Paper (LaTeX)
+# -------------------------
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.lof
+paper/*.lot
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+paper/*.pdfsync
+
+# keep the main LaTeX sources and final PDF
+!paper/
+!paper/*.tex
+!paper/*.pdf
+
+# -------------------------
+# Misc
+# -------------------------
+project_structure.txt

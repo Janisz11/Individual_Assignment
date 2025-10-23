@@ -1,0 +1,6 @@
+language,size,execution_time_s,memory_usage_mb
+python,10,0.000240,0.00
+python,50,0.040637,0.08
+python,100,0.274325,0.31
+python,200,1.975397,1.23
+python,400,29.676420,4.90
